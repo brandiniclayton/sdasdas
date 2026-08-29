@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TYO Options Dashboard</title>
+
+<style>
+:root {
+    --bg: #080b12;
+    --panel: #101621;
+    --panel2: #151c29;
+    --border: #263143;
+    --text: #e8edf5;
+    --muted: #8995a8;
+    --green: #19c37d;
+    --red: #ff5263;
+    --blue: #4d8dff;
+    --yellow: #f5c451;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+header {
+    padding: 22px;
+    border-bottom: 1px solid var(--border);
+    background: #0b0f17;
+}
+
+.header-inner {
+    max-width: 1500px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.logo span {
+    color: var(--blue);
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.price-box {
+    text-align: right;
+}
+
+.price {
+    font-size: 27px;
+    font-weight: 800;
+}
+
+.change {
+    color: var(--green);
+    font-size: 14px;
+}
+
+main {
+    max-width: 1500px;
+    margin: auto;
+    padding: 22px;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 180px 180px 1fr auto;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+select,
+input,
+button {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 11px 13px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--panel2);
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.stat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.stat-value {
+    margin-top: 5px;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.tab {
+    padding: 9px 18px;
+    border-radius: 7px;
+}
+
+.tab.active {
+    background: var(--blue);
+    border-color: var(--blue);
+}
+
+.table-wrap {
+    overflow-x: auto;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+thead {
+    background: var(--panel2);
+}
+
+th {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: right;
+    padding: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+th:first-child,
+td:first-child {
+    text-align: left;
+}
+
+td {
+    padding: 12px 13px;
+    text-align: right;
+    border-top: 1px solid #1c2533;
+    font-size: 13px;
+}
+
+tr:hover {
+    background: #151d2a;
+}
+
+.call {
+    color: var(--green);
+}
+
+.put {
+    color: var(--red);
+}
+
+.itm {
+    background: rgba(77, 141, 255, .07);
+}
+
+.mid {
+    font-weight: 700;
+}
+
+.status {
+    margin-top: 13px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.loading {
+    padding: 50px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.error {
+    padding: 25px;
+    color: var(--red);
+    text-align: center;
+}
+
+footer {
+    max-width: 1500px;
+    margin: auto;
+    padding: 20px 22px 40px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+@media(max-width: 850px) {
+    .controls {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .header-inner {
+        align-items: flex-start;
+    }
+
+    .price-box {
+        text-align: left;
+    }
+}
+
+@media(max-width: 550px) {
+    .header-inner {
+        flex-direction: column;
+    }
+
+    .controls,
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    main {
+        padding: 12px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+```
+    <div>
+        <div class="logo"><span>TYO</span> OPTIONS</div>
+        <div class="subtitle">
+            Direxion Daily 7–10 Year Treasury Bear 3X Shares
+        </div>
+    </div>
+
+    <div class="price-box">
+        <div class="price" id="underlyingPrice">—</div>
+        <div class="change" id="underlyingChange">—</div>
+    </div>
+
+</div>
+```
+
+</header>
+
+<main>
+
+```
+<div class="controls">
+
+    <select id="expiration">
+        <option value="">All expirations</option>
+    </select>
+
+    <select id="side">
+        <option value="all">Calls + Puts</option>
+        <option value="call">Calls only</option>
+        <option value="put">Puts only</option>
+    </select>
+
+    <input
+        id="search"
+        type="text"
+        placeholder="Search strike, expiration or contract..."
+    >
+
+    <button onclick="loadData()">↻ Refresh</button>
+
+</div>
+
+<div class="stats">
+
+    <div class="stat">
+        <div class="stat-label">Contracts</div>
+        <div class="stat-value" id="contracts">—</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">Total Volume</div>
+        <div class="stat-value" id="volume">—</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">Total Open Interest</div>
+        <div class="stat-value" id="oi">—</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">Calls</div>
+        <div class="stat-value call" id="calls">—</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">Puts</div>
+        <div class="stat-value put" id="puts">—</div>
+    </div>
+
+</div>
+
+<div class="tabs">
+    <button class="tab active" onclick="setSide('all', this)">
+        All
+    </button>
+
+    <button class="tab" onclick="setSide('call', this)">
+        Calls
+    </button>
+
+    <button class="tab" onclick="setSide('put', this)">
+        Puts
+    </button>
+</div>
+
+<div class="table-wrap">
+
+    <table>
+
+        <thead>
+            <tr>
+                <th onclick="sortBy('expiration')">Expiration</th>
+                <th onclick="sortBy('type')">Type</th>
+                <th onclick="sortBy('strike')">Strike</th>
+                <th onclick="sortBy('bid')">Bid</th>
+                <th onclick="sortBy('ask')">Ask</th>
+                <th onclick="sortBy('last')">Last</th>
+                <th onclick="sortBy('mid')">Mid</th>
+                <th onclick="sortBy('volume')">Volume</th>
+                <th onclick="sortBy('oi')">Open Interest</th>
+                <th onclick="sortBy('iv')">IV</th>
+            </tr>
+        </thead>
+
+        <tbody id="tableBody">
+            <tr>
+                <td colspan="10">
+                    <div class="loading">
+                        Loading TYO option chain...
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+<div class="status" id="status">
+    Waiting for data...
+</div>
+```
+
+</main>
+
+<footer>
+    TYO Options Dashboard · Data may be delayed. This page is for informational
+    purposes and is not investment advice.
+</footer>
+
+<script>
+
+/*
+===========================================================
+TYO OPTIONS DASHBOARD
+===========================================================
+
+IMPORTANT:
+
+Replace API_URL with an endpoint that you are authorized to
+access.
+
+Expected response format:
+
+{
+    "underlyingPrice": 14.80,
+    "underlyingChange": 0.42,
+
+    "options": [
+        {
+            "expiration": "2026-09-18",
+            "type": "call",
+            "strike": 15,
+            "bid": 0.30,
+            "ask": 0.40,
+            "last": 0.35,
+            "volume": 123,
+            "oi": 456,
+            "iv": 0.52
+        }
+    ]
+}
+
+===========================================================
+*/
+
+const API_URL = "";
+
+let allOptions = [];
+let currentSide = "all";
+let sortColumn = "expiration";
+let sortDirection = 1;
+
+
+/* -----------------------------
+   LOAD DATA
+----------------------------- */
+
+async function loadData() {
+
+    if (!API_URL) {
+
+        /*
+        Demo data is used until you configure an API.
+
+        Remove this block and point API_URL at your
+        permitted market-data endpoint.
+        */
+
+        useDemoData();
+
+        return;
+    }
+
+    setStatus("Downloading TYO option chain...");
+
+    try {
+
+        const response = await fetch(API_URL, {
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        allOptions = data.options || [];
+
+        document.getElementById("underlyingPrice").textContent =
+            formatMoney(data.underlyingPrice);
+
+        document.getElementById("underlyingChange").textContent =
+            formatPercent(data.underlyingChange);
+
+        populateExpirations();
+        render();
+
+        setStatus(
+            "Updated " +
+            new Date().toLocaleString()
+        );
+
+    } catch (error) {
+
+        document.getElementById("tableBody").innerHTML =
+            `<tr>
+                <td colspan="10">
+                    <div class="error">
+                        Could not load option data.<br>
+                        ${escapeHTML(error.message)}
+                    </div>
+                </td>
+            </tr>`;
+
+        setStatus("Data request failed.");
+
+    }
+}
+
+
+/* -----------------------------
+   DEMO DATA
+----------------------------- */
+
+function useDemoData() {
+
+    const strikes = [
+        12, 13, 14, 15, 16, 17, 18
+    ];
+
+    const expirations = [
+        "2026-09-18",
+        "2026-10-16",
+        "2026-11-20",
+        "2027-02-19"
+    ];
+
+    allOptions = [];
+
+    expirations.forEach(expiration => {
+
+        strikes.forEach(strike => {
+
+            const distance = Math.abs(strike - 14.8);
+
+            allOptions.push({
+
+                expiration,
+                type: "call",
+                strike,
+
+                bid: Math.max(
+                    .01,
+                    .65 - distance * .10
+                ),
+
+                ask: Math.max(
+                    .02,
+                    .80 - distance * .10
+                ),
+
+                last: Math.max(
+                    .01,
+                    .72 - distance * .10
+                ),
+
+                volume: Math.floor(
+                    Math.random() * 1000
+                ),
+
+                oi: Math.floor(
+                    Math.random() * 5000
+                ),
+
+                iv: .40 + Math.random() * .30
+
+            });
+
+            allOptions.push({
+
+                expiration,
+                type: "put",
+                strike,
+
+                bid: Math.max(
+                    .01,
+                    .55 - distance * .08
+                ),
+
+                ask: Math.max(
+                    .02,
+                    .70 - distance * .08
+                ),
+
+                last: Math.max(
+                    .01,
+                    .61 - distance * .08
+                ),
+
+                volume: Math.floor(
+                    Math.random() * 1000
+                ),
+
+                oi: Math.floor(
+                    Math.random() * 5000
+                ),
+
+                iv: .40 + Math.random() * .30
+
+            });
+
+        });
+
+    });
+
+    document.getElementById("underlyingPrice").textContent =
+        "$14.80";
+
+    document.getElementById("underlyingChange").textContent =
+        "+0.42%";
+
+    populateExpirations();
+    render();
+
+    setStatus(
+        "Demo data displayed. Configure API_URL for live data."
+    );
+}
+
+
+/* -----------------------------
+   EXPIRATIONS
+----------------------------- */
+
+function populateExpirations() {
+
+    const select =
+        document.getElementById("expiration");
+
+    const current = select.value;
+
+    const expirations =
+        [...new Set(
+            allOptions.map(x => x.expiration)
+        )].sort();
+
+    select.innerHTML =
+        `<option value="">All expirations</option>`;
+
+    expirations.forEach(expiration => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = expiration;
+        option.textContent = formatDate(expiration);
+
+        select.appendChild(option);
+
+    });
+
+    select.value = current;
+
+}
+
+
+/* -----------------------------
+   FILTERING
+----------------------------- */
+
+function getFilteredOptions() {
+
+    const expiration =
+        document.getElementById("expiration").value;
+
+    const search =
+        document.getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+    return allOptions.filter(option => {
+
+        if (
+            currentSide !== "all" &&
+            option.type !== currentSide
+        ) {
+            return false;
+        }
+
+        if (
+            expiration &&
+            option.expiration !== expiration
+        ) {
+            return false;
+        }
+
+        if (search) {
+
+            const text = [
+                option.expiration,
+                option.type,
+                option.strike,
+                option.bid,
+                option.ask,
+                option.last
+            ].join(" ").toLowerCase();
+
+            if (!text.includes(search)) {
+                return false;
+            }
+        }
+
+        return true;
+
+    });
+
+}
+
+
+/* -----------------------------
+   RENDER
+----------------------------- */
+
+function render() {
+
+    let options = getFilteredOptions();
+
+    options.sort((a, b) => {
+
+        let x = a[sortColumn];
+        let y = b[sortColumn];
+
+        if (
+            typeof x === "number" &&
+            typeof y === "number"
+        ) {
+            return (x - y) * sortDirection;
+        }
+
+        return String(x)
+            .localeCompare(String(y))
+            * sortDirection;
+
+    });
+
+    updateStats(options);
+
+    const body =
+        document.getElementById("tableBody");
+
+    if (!options.length) {
+
+        body.innerHTML =
+            `<tr>
+                <td colspan="10">
+                    <div class="loading">
+                        No contracts match your filters.
+                    </div>
+                </td>
+            </tr>`;
+
+        return;
+    }
+
+    body.innerHTML = options.map(option => {
+
+        const mid =
+            option.mid ??
+            (
+                Number(option.bid || 0) +
+                Number(option.ask || 0)
+            ) / 2;
+
+        return `
+        <tr>
+
+            <td>
+                ${escapeHTML(formatDate(option.expiration))}
+            </td>
+
+            <td class="${option.type}">
+                ${option.type.toUpperCase()}
+            </td>
+
+            <td>
+                $${formatNumber(option.strike)}
+            </td>
+
+            <td>
+                ${formatOptionPrice(option.bid)}
+            </td>
+
+            <td>
+                ${formatOptionPrice(option.ask)}
+            </td>
+
+            <td>
+                ${formatOptionPrice(option.last)}
+            </td>
+
+            <td class="mid">
+                ${formatOptionPrice(mid)}
+            </td>
+
+            <td>
+                ${formatNumber(option.volume)}
+            </td>
+
+            <td>
+                ${formatNumber(option.oi)}
+            </td>
+
+            <td>
+                ${formatIV(option.iv)}
+            </td>
+
+        </tr>
+        `;
+
+    }).join("");
+
+}
+
+
+/* -----------------------------
+   STATISTICS
+----------------------------- */
+
+function updateStats(options) {
+
+    const calls =
+        options.filter(x => x.type === "call");
+
+    const puts =
+        options.filter(x => x.type === "put");
+
+    const volume =
+        options.reduce(
+            (sum, x) => sum + Number(x.volume || 0),
+            0
+        );
+
+    const oi =
+        options.reduce(
+            (sum, x) => sum + Number(x.oi || 0),
+            0
+        );
+
+    document.getElementById("contracts")
+        .textContent =
+        options.length.toLocaleString();
+
+    document.getElementById("volume")
+        .textContent =
+        volume.toLocaleString();
+
+    document.getElementById("oi")
+        .textContent =
+        oi.toLocaleString();
+
+    document.getElementById("calls")
+        .textContent =
+        calls.length.toLocaleString();
+
+    document.getElementById("puts")
+        .textContent =
+        puts.length.toLocaleString();
+
+}
+
+
+/* -----------------------------
+   SIDE
+----------------------------- */
+
+function setSide(side, button) {
+
+    currentSide = side;
+
+    document
+        .querySelectorAll(".tab")
+        .forEach(x => x.classList.remove("active"));
+
+    button.classList.add("active");
+
+    document.getElementById("side").value = side;
+
+    render();
+}
+
+
+/* -----------------------------
+   SORT
+----------------------------- */
+
+function sortBy(column) {
+
+    if (sortColumn === column) {
+
+        sortDirection *= -1;
+
+    } else {
+
+        sortColumn = column;
+        sortDirection = 1;
+
+    }
+
+    render();
+
+}
+
+
+/* -----------------------------
+   FORMATTING
+----------------------------- */
+
+function formatMoney(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "—";
+    }
+
+    return "$" +
+        Number(value).toFixed(2);
+}
+
+
+function formatOptionPrice(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "—";
+    }
+
+    return "$" +
+        Number(value).toFixed(2);
+}
+
+
+function formatNumber(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "—";
+    }
+
+    return Number(value).toLocaleString(
+        undefined,
+        {
+            maximumFractionDigits: 2
+        }
+    );
+}
+
+
+function formatIV(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "—";
+    }
+
+    let number = Number(value);
+
+    if (number <= 1) {
+        number *= 100;
+    }
+
+    return number.toFixed(1) + "%";
+}
+
+
+function formatPercent(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "—";
+    }
+
+    const number = Number(value);
+
+    return (
+        number >= 0 ? "+" : ""
+    ) +
+    number.toFixed(2) +
+    "%";
+}
+
+
+function formatDate(date) {
+
+    if (!date) return "—";
+
+    const d = new Date(date + "T00:00:00");
+
+    if (Number.isNaN(d.getTime())) {
+        return date;
+    }
+
+    return d.toLocaleDateString(
+        undefined,
+        {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        }
+    );
+}
+
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+function setStatus(text) {
+
+    document.getElementById("status")
+        .textContent = text;
+
+}
+
+
+/* -----------------------------
+   EVENTS
+----------------------------- */
+
+document
+    .getElementById("expiration")
+    .addEventListener(
+        "change",
+        render
+    );
+
+document
+    .getElementById("side")
+    .addEventListener(
+        "change",
+        function() {
+
+            currentSide = this.value;
+
+            document
+                .querySelectorAll(".tab")
+                .forEach(x =>
+                    x.classList.remove("active")
+                );
+
+            render();
+
+        }
+    );
+
+document
+    .getElementById("search")
+    .addEventListener(
+        "input",
+        render
+    );
+
+
+/* -----------------------------
+   AUTOMATIC REFRESH
+----------------------------- */
+
+/*
+Every three hours.
+
+This refreshes the page's data while it is open.
+GitHub Pages itself does not execute JavaScript
+while nobody has the page open.
+*/
+
+setInterval(
+    loadData,
+    3 * 60 * 60 * 1000
+);
+
+
+/* INITIAL LOAD */
+
+loadData();
+
+</script>
+
+</body>
+</html>
